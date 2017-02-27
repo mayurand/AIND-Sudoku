@@ -100,7 +100,8 @@ def naked_twins(values):
                 if len(value)>1: 
                     for box_ in unit:
                         if box_ not in value:
-                            values[box_] = values[box_].replace(key,"") 
+                            values[box_] = values[box_].replace(key[0],"") 
+                            values[box_] = values[box_].replace(key[1],"") 
                         
    
     return values
@@ -212,16 +213,17 @@ def solve(grid):
     """
     ## Generate the sudoku grid
     values = grid_values(grid)
-    
+     
     ## Record the complete dictionary first
     assign_value(values, boxes[0], values[boxes[0]])
-    
+     
     ## Generate the dictionary for values possible for every box  
     for box, value in values.items():
         if value == '.':
             values = assign_value(values, box, cols)
-
+ 
     values = search(values)
+
 
     return values
     

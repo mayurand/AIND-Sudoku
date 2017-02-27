@@ -3,11 +3,12 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: 
+A: We iterate over each of the units in the unitlist to find the twin pairs. If a pair is found then the values in this pair are removed from the other peers in the same unit. Naked twins problem is taken as a third constraint along with eliminate and only choice.  
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: To solve the diagonal sudoku problem add a new constraint as a unit to unitlist which consists of columns, rows and 3X3 box as a unit. 
+Including the diagonals as a unit, keeps the problem same and only adds a new constraint in the problem definition. The rest of the code remains the same.
 
 ### Install
 
