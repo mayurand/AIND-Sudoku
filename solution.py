@@ -1,6 +1,5 @@
 assignments = []
 
-
 rows = 'ABCDEFGHI'
 cols = '123456789'
 
@@ -13,8 +12,12 @@ row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
 
+# To include the diagonal sudoku problem, simply add a new constraint as a unit to unitlist
+diagonal_units1 = [rows[i]+cols[i] for i in range(len(rows))]
+diagonal_units2 = [rows[i]+cols[8-i] for i in range(len(rows))]
+diagonal_units = [diagonal_units1,diagonal_units2]
 
-unitlist = row_units + column_units + square_units
+unitlist = row_units + column_units + square_units + diagonal_units
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
 
@@ -58,6 +61,7 @@ def display(values):
     Display the values as a 2-D grid.
     Args:
         values(dict): The sudoku in dictionary form
+    Returns: None
     """
     width = 1+max(len(values[s]) for s in boxes)
     line = '+'.join(['-'*(width*3)]*3)
@@ -79,13 +83,12 @@ def naked_twins(values):
 
     ## Find all instances of naked twins
     for unit in unitlist:
-        
         # Take a dictionary of a unit 
         unit_dict = dict()
         
         for box in unit:
             box_val = values[box]
-            if len(box_val)==2:
+            if len(box_val)==2: # For pair of values
                 if box_val not in unit_dict.keys():
                     unit_dict[box_val]=[]
                 unit_dict[box_val].append(box)
@@ -104,7 +107,13 @@ def naked_twins(values):
 
 
 def eliminate(values):
-    """Eliminate the numbers that are not possible in the solution"""
+    """Eliminate the numbers that are not possible in the solution
+    Args:
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+
+    Returns:
+        the values dictionary with the naked twins eliminated from peers.
+    """
     
     for box in values.keys():
         digit = values[box]
@@ -116,7 +125,14 @@ def eliminate(values):
     return values
 
 def only_choice(values):
-    """Select the only choice element"""
+    """Select the only choice element
+    Args:
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+
+    Returns:
+        the values dictionary with the naked twins eliminated from peers.
+    
+    """
     num_places = []
     for unit in unitlist:
         for digit in '123456789':
@@ -132,7 +148,13 @@ def only_choice(values):
 
 
 def reduce_puzzle(values):
-    """Reduce the puzzle using constraint propagation: elimination and only choice"""
+    """Reduce the puzzle using constraint propagation: elimination, only choice and naked twins
+    Args:
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+
+    Returns:
+        the values dictionary with the naked twins eliminated from peers.
+    """
     
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
     stalled = False
@@ -151,8 +173,14 @@ def reduce_puzzle(values):
     return values
 
 def search(values):
-    "Using depth-first search and propagation, create a search tree and solve the sudoku."
+    """Using depth-first search and propagation, create a search tree and solve the sudoku.
     
+        Args:
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+
+    Returns:
+        the values dictionary with the naked twins eliminated from peers.
+    """
     
     ## Try reduce puzzle to find a solution using constraint propagation and if doesn't work then try search
     values = reduce_puzzle(values)
