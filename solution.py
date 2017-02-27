@@ -94,8 +94,8 @@ def naked_twins(values):
                 unit_dict[box_val].append(box)
 
         if bool(unit_dict): # Check if dictinary empty
-            for key, value in unit_dict.items():
-                # If actually a twin pair then remove the values from that unit
+            for key, value in unit_dict.items(): 
+                # If actually a twin pair then remove these values in twins from that unit except at these two locations
                 # Eliminate the naked twins as possibilities from that unit
                 if len(value)>1: 
                     for box_ in unit:
